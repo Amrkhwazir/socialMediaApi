@@ -7,8 +7,8 @@ import User from "../models/User.js";
 export const register = async (req, res, next) => {
 
 try{
-const salt = bcrypt.genSaltSync(10);
-const hashedPasscode = bcrypt.hashSync(req.body.password, salt); 
+const salt = await bcrypt.genSalt(10);
+const hashedPasscode = await bcrypt.hash(req.body.password, salt); 
 const newUser = new User({...req.body, password: hashedPasscode });
 
 await newUser.save();   
@@ -20,13 +20,12 @@ next(err)
 
 };
 
-export const login = async (req, res) => {
-
+export const login = async(req, res) => {
     try {
         const loggedUser = await User.findOne({email: req.body.email});
         !loggedUser && res.status(404).json("wrong email");
 
-        const validPasscode = await bcrypt.compare(req.body.password, loggedUser.password);
+        const validPasscode = bcrypt.compareSync(req.body.password, loggedUser.password);
         !validPasscode && res.status(400).json("wrong password");
 
         res.status(200).json("User logged In");
