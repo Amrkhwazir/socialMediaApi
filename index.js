@@ -5,6 +5,7 @@ import morgan from "morgan";
 import dotenv from 'dotenv';
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 
 const app = express();
 dotenv.config();
@@ -35,6 +36,7 @@ app.use((req, res, next)=>{
 
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
+app.use("/post", postRoutes);
 
 
 app.listen(port, ()=>{

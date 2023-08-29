@@ -5,7 +5,6 @@ import User  from "../models/User.js";
 // get user
 export const getProfile = async (req, res) => {
     try {
-
         const getUser = await User.findById(req.params.id);
         const {password, updatedAt, ...other} = getUser._doc       
         res.status(200).json(other)
@@ -67,14 +66,20 @@ export const deletePofile = async (req, res) => {
 
 //    follow user
 export const followUser = async (req, res) => {
+
    if(req.body.userId !== req.params.id){
     try {
         const followUser = await User.findById(req.params.id);
+        console.log(followUser)
         const currentUser = await User.findById(req.body.userId);
-        if(!followUser.includes(req.body.userId)){
-            await followUser.updateOne({$push: {followers: req.body.userId}});
-            await currentUser.updateOne({$push: {following: req.body.userId}});
+        console.log(currentUser)
+
+        if(!followUser.followers.includes(req.body.userId)){
+
+            await followUser.updateOne({$push: {followers: req.body.userId }});
+            await currentUser.updateOne({$push: {following: req.body.userId }});
             res.status(200).json("user has been followed")
+
         }else{
             res.status(403).json("you already follow this user")
         }
@@ -83,5 +88,34 @@ export const followUser = async (req, res) => {
     }
    }else{
     res.status(403).json("you can't follow yourself")
+   }
+   };
+
+
+
+   //    follow user
+export const unFollowUser = async (req, res) => {
+
+   if(req.body.userId !== req.params.id){
+    try {
+        const followUser = await User.findById(req.params.id);
+        console.log(followUser)
+        const currentUser = await User.findById(req.body.userId);
+        console.log(currentUser)
+
+        if(followUser.followers.includes(req.body.userId)){
+
+            await followUser.updateOne({$pull: {followers: req.body.userId }});
+            await currentUser.updateOne({$pull: {following: req.body.userId }});
+            res.status(200).json("user has been unfollowed")
+
+        }else{
+            res.status(403).json("you already unfollow this user")
+        }
+    } catch (error) {
+        res.status(500).json(error)    
+    }
+   }else{
+    res.status(403).json("you can't unfollow yourself")
    }
    };

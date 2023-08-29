@@ -31,8 +31,9 @@ export const login = async(req, res) => {
         res.status(200).json("User logged In");
 
     } catch (error) {
+
         console.log(error);
-        res.status(500).json(error)
+        res.status(500).json("user not found")
         
     }; 
 };
