@@ -2,10 +2,13 @@ import bcrypt from "bcrypt";
 import User  from "../models/User.js";
 
 
+
 // get user
 export const getProfile = async (req, res) => {
+    const userId = req.query.userId;
+    const username = req.query.username;
     try {
-        const getUser = await User.findById(req.params.id);
+        const getUser = userId ? await User.findById(userId) :  await User.findOne({ name: username});
         const {password, updatedAt, ...other} = getUser._doc       
         res.status(200).json(other)
 
@@ -119,3 +122,5 @@ export const unFollowUser = async (req, res) => {
     res.status(403).json("you can't unfollow yourself")
    }
    };
+
+

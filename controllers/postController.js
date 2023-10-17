@@ -96,7 +96,7 @@ export const timelinePosts = async (req, res) => {
     console.log("get a all post");
     let postArray = [];
     try {
-        const currentUser = await User.findById(req.body.userId);
+        const currentUser = await User.findById(req.params.userId);
         const userPost = await Post.find({userId: currentUser._id});
         const friendPost = await Promise.all(
             currentUser.following.map((friendId)=>{
@@ -109,3 +109,24 @@ export const timelinePosts = async (req, res) => {
     }
  
 };
+
+   // get users all posts
+
+export const usersAllPosts = async (req, res) => {
+   
+    try {
+        const user = await User.findOne({name: req.params.username});
+        const posts = await Post.find({userId : user._id});
+        res.status(200).send({
+            status: 'Success',
+            data: posts})
+    } catch (error) {
+        res.status(500).send({
+            status: 'Failed',
+            message: error.message
+        })
+    }
+ 
+};
+
+

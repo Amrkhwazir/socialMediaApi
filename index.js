@@ -6,8 +6,10 @@ import dotenv from 'dotenv';
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import cors from "cors"
 
 const app = express();
+app.use(cors())
 dotenv.config();
 const port = 8000;
 
